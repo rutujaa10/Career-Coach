@@ -50,20 +50,39 @@ const OnboardingForm = ({ industries }) => {
     resolver: zodResolver(onboardingSchema),
   });
 
-  const onSubmit = async (values) => {
-    try {
-      const formattedIndustry = `${values.industry}-${values.subIndustry
-        .toLowerCase()
-        .replace(/ /g, "-")}`;
+  // const onSubmit = async (values) => {
+  //   try {
+  //     const formattedIndustry = `${values.industry}-${values.subIndustry
+  //       .toLowerCase()
+  //       .replace(/ /g, "-")}`;
 
-      await updateUserFn({
-        ...values,
-        industry: formattedIndustry,
-      });
-    } catch (error) {
-      console.error("Onboarding error:", error);
+  //     await updateUserFn({
+  //       ...values,
+  //       industry: formattedIndustry,
+  //     });
+  //   } catch (error) {
+  //     console.error("Onboarding error:", error);
+  //   }
+  // };
+const onSubmit = async (values) => {
+  try {
+    const formattedIndustry = `${values.industry}-${values.subIndustry
+      .toLowerCase()
+      .replace(/ /g, "-")}`;
+
+    const result = await updateUserFn({
+      ...values,
+      industry: formattedIndustry,
+    });
+
+    if (!result?.success) {
+      toast.error(result?.error || "Failed to update profile");
     }
-  };
+  } catch (error) {
+    console.error("Onboarding error:", error);
+    toast.error("Unexpected error during onboarding");
+  }
+};
 
   useEffect(() => {
     if (updateResult?.success && !updateLoading) {
