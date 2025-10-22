@@ -3,34 +3,55 @@ import Link from "next/link";
 import Image from "next/image";
 import { checkUser } from "@/lib/checkUser";
 import { Button } from "./ui/button";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { BarChart2, FileText, Edit3, Award } from "lucide-react";
 
-// Client component inside same file
+// ✅ Client component
 const HeaderActions = () => {
   "use client";
 
   return (
     <div className="flex items-center w-full">
+      {/* --- Signed In View --- */}
       <SignedIn>
         <div className="flex items-center space-x-2 md:space-x-4 ml-auto">
           <Link href="/dashboard">
-            <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="hidden md:inline-flex items-center gap-2"
+            >
               <BarChart2 className="h-4 w-4" /> Industry Insights
             </Button>
           </Link>
+
           <Link href="/resume">
-            <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="hidden md:inline-flex items-center gap-2"
+            >
               <FileText className="h-4 w-4" /> Build Resume
             </Button>
           </Link>
+
           <Link href="/ai-cover-letter">
-            <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="hidden md:inline-flex items-center gap-2"
+            >
               <Edit3 className="h-4 w-4" /> Cover Letter
             </Button>
           </Link>
+
           <Link href="/interview">
-            <Button variant="outline" className="hidden md:inline-flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="hidden md:inline-flex items-center gap-2"
+            >
               <Award className="h-4 w-4" /> Interview Prep
             </Button>
           </Link>
@@ -48,8 +69,12 @@ const HeaderActions = () => {
         </div>
       </SignedIn>
 
+      {/* --- Signed Out View --- */}
       <SignedOut>
-        <SignInButton>
+        <SignInButton
+          fallbackRedirectUrl="/onboarding" // ✅ use new prop (not afterSignInUrl)
+          forceRedirectUrl="/onboarding" // optional: forces redirect after sign-in/signup
+        >
           <Button variant="outline" className="ml-auto">
             Sign In
           </Button>
@@ -59,7 +84,7 @@ const HeaderActions = () => {
   );
 };
 
-// Server component
+// ✅ Server component
 const Header = async () => {
   await checkUser();
 
@@ -76,7 +101,6 @@ const Header = async () => {
           />
         </Link>
 
-        {/* Render client component */}
         <HeaderActions />
       </nav>
     </header>
